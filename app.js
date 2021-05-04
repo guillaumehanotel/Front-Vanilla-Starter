@@ -1,24 +1,25 @@
-import * as Validator from 'validatorjs'
+import Joi from "joi";
 
 const form = document.querySelector(".main-form");
 
+const validateUser = (data) => {
+  const schema = Joi.object({
+    firstname: Joi.string().alphanum().min(4).max(20).required(),
+    lastname: Joi.string().alphanum().min(2).max(10).required(),
+  }).with("firstname", "lastname");
+  return schema.validate(data);
+};
+
 form.addEventListener("submit", function (event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const formData = new FormData(form);
+  const formData = new FormData(form);
 
-    let data = {
-        firstname: formData.get('firstname'),
-        lastname: formData.get('lastname')
-    };
+  let data = {
+    firstname: formData.get("firstname"),
+    lastname: formData.get("lastname"),
+  };
 
-    let rules = {
-        lastname: 'required',
-        firstname: 'required'
-    };
-
-    let validation = new Validator(data, rules);
-
-    console.log(validation.passes())
-
+  let isValidated = validateUser(data);
+  console.log(isValidated);
 });
